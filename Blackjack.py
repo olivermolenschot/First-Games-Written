@@ -109,6 +109,7 @@ class FullGame:
         while  FullGame.playerexit == False:
             FullGame.answer = ''
             FullGame.restartDesire = ''
+            FullGame.Inferior = True
             while currentplayers.buyIn <= 0:
                 try:
                     currentplayers.buyIn = int(input('How much would you like to buy in?: '))
