@@ -35,12 +35,11 @@ currentplayers = Players("",0,playercards,'random2',0)
 
 def shuffleDeck():
     random.shuffle(firstgame.totalCards)
-    print('Cards are being shuffled')
-    time.sleep(1)
+    print('\nCards are being shuffled')
     print(f'The cards of {currentplayers.player} are {firstgame.totalCards[0]} and {firstgame.totalCards[1]} ')
     currentplayers.playercards = firstgame.totalCards[0] + firstgame.totalCards[1]
-    time.sleep(1)
-    print(f'The card that the dealer currently holds is {firstgame.totalCards[2]}')
+    print(f'The card that the dealer currently holds is {firstgame.totalCards[2]} \n')
+    time.sleep(5)
     currentplayers.dealercards = firstgame.totalCards[2]
 #------------------------------------------------------#
 #defining point system
@@ -104,8 +103,8 @@ class FullGame:
         print(f'{personDirectionText} overall points are {specificPlayerPoints}')
         FullGame.newCard = ''
     def startgame(self):
-        print('Welcome to Olivers Casino. Here you will lose all your money. ')
-        currentplayers.player = input('What is your name, noob?: ')
+        print('Welcome to Olivers Casino. This is the table where we play Blackjack.')
+        currentplayers.player = input('What is your name?: ')
         while  FullGame.playerexit == False:
             FullGame.answer = ''
             FullGame.restartDesire = ''
@@ -118,6 +117,17 @@ class FullGame:
             while currentplayers.currentPotInvestment <= 0:
                 try:
                     currentplayers.currentPotInvestment = int(input('How much would you like to bet on this rounds pot?: '))
+                    if currentplayers.currentPotInvestment > currentplayers.buyIn:
+                        temp_var = 0
+                        print('You cannot bet more money than what you have in your stack. ')
+                        while temp_var ==0:
+                            try:
+                                currentplayers.currentPotInvestment = int(input('Please provide an acceptable value:'))
+                            except Exception:
+                                print('Only whole numbers are accepted')
+                            if currentplayers.currentPotInvestment <= currentplayers.buyIn:
+                                temp_var += 1
+
                 except Exception:
                     print('Only whole numbers are accepted')
             currentplayers.buyIn -= currentplayers.currentPotInvestment
@@ -127,14 +137,13 @@ class FullGame:
             dealerPoints = PointSystem(currentplayers.dealercards, 0)
             player1Points.scoreIncrease()
             dealerPoints.scoreIncrease()
-            time.sleep(1.2)
             print(f'You currently have {player1Points.scoreePoints} points')
-            time.sleep(1.2)
             print(f'The dealer currently has {dealerPoints.scoreePoints} points')
-            time.sleep(1)
+            #time.sleep()
             while FullGame.answer != 'pass':
                 if player1Points.scoreePoints <= 21 or 1 <= player1Points.totalLowAce <= 21:
                     FullGame.answer = input('Would you like to hit or pass?: '.lower())
+                    print('\n')
                     if FullGame.answer == 'hit':
                         FullGame.newCard = firstgame.totalCards[FullGame.cardIncrease+1]
                         FullGame.cardIncrease += 1
@@ -174,27 +183,28 @@ class FullGame:
                         dealerPoints.scoreIncrease()
                         print(f'The dealers overall points are {dealerPoints.scoreePoints}')
                         FullGame.newCard = ''
-                        time.sleep(1.2)
+                        time.sleep(6.5)
                         if dealerPoints.scoreePoints > 17 or dealerPoints.scoreePoints > player1Points.scoreePoints:
                             FullGame.Inferior = False
+                            print('\n')
 
 
                 if player1Points.scoreePoints > 21:
                     pass
-                if dealerPoints.totalLowAce <= 21 < dealerPoints.totalLowAce:
+                if dealerPoints.totalLowAce <= 21 < dealerPoints.scoreePoints:
                     print(f'As the score of the dealer, with a high ace, would be {dealerPoints.scoreePoints}, ''\n'
                         f'only the score with the low ace is considered, which is {dealerPoints.totalLowAce}')
                     dealerPoints.scoreePoints = dealerPoints.totalLowAce
-                elif dealerPoints.scoreePoints >21:
+                if dealerPoints.scoreePoints >21:
                     print('Dealer has more than 21 points.' '\n'
                         f'You have received {currentplayers.currentPotInvestment*2}' '\n'
                         f'Your new balance is {currentplayers.buyIn+currentplayers.currentPotInvestment*2}')
-                    time.sleep(2)
+                    time.sleep(3.5)
                     currentplayers.buyIn += currentplayers.currentPotInvestment*2
-                elif 21 > dealerPoints.scoreePoints > player1Points.scoreePoints:
+                elif 21 >= dealerPoints.scoreePoints > player1Points.scoreePoints:
                     print(f'Dealer has won this round with points totaling {dealerPoints.scoreePoints}, while you only had {player1Points.scoreePoints}' '\n'
                         f'The dealer has received your money in the pot, which is equal to {currentplayers.currentPotInvestment}')
-                    time.sleep(2)
+                    time.sleep(3.5)
                     print(f'Your remaining balance is {currentplayers.buyIn}')
                     pass
                 elif 21 > player1Points.scoreePoints > dealerPoints.scoreePoints:
@@ -206,12 +216,13 @@ class FullGame:
                     print(f'This round is a tie. Both you and the dealer have a score of {player1Points.scoreePoints}')
                     currentplayers.buyIn += currentplayers.currentPotInvestment
                     print(f'Your balance remained at {currentplayers.buyIn}')
-                time.sleep(2)
+                time.sleep(3.5)
+
             else:
                 print(
                     f'Dealer has won this round with points totaling {dealerPoints.scoreePoints}, while you only had {player1Points.scoreePoints}' '\n'
                     f'The dealer has received your money in the pot, which is equal to {currentplayers.currentPotInvestment}')
-                time.sleep(2)
+                time.sleep(3.5)
                 print(f'Your remaining balance is {currentplayers.buyIn}')
                 if player1Points.scoreePoints == dealerPoints.scoreePoints:
                     print(f'This round is a tie. Both you and the dealer have a score of {player1Points.scoreePoints}')
@@ -221,9 +232,10 @@ class FullGame:
                 FullGame.restartDesire = input('Would you like to restart the game? (yes/no): '.lower())
             if FullGame.restartDesire == 'yes':
                 FullGame.playerexit = False
+                print('\n')
             elif FullGame.restartDesire != 'yes':
                 FullGame.playerexit = True
-                print('Bye bye noob!')
+                print('\nBye bye!')
 
 
 
